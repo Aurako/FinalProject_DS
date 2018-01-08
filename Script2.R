@@ -14,6 +14,8 @@ Train <- subset(data,rgroup<=0.7)
 Test <- subset(data,rgroup>0.7)
 
 # build model
+mushVars <- setdiff(colnames(data), list('class', 'rgroup'))
+Formula <- as.formula(paste('class', paste(mushVars,collapse=' + '),sep=' ~ '))
 ctrl<-trainControl(method="cv", number=5)
 SVM <- train(Formula, data=Train, method = "svmLinear", trControl = ctrl)
 plot(varImp(SVM), main="SVM Variable Importance")
@@ -22,4 +24,3 @@ pred <- predict(SVM, Test)
 # confusion matrix
 cm<-data.frame(Actual=Test$class,Predict=pred)
 confusionMatrix(table(cm$Actual,cm$Predict))
-
